@@ -5,8 +5,8 @@ I am currently working at the [ENS-Lyon](http://www.ens-lyon.fr.fr) as a system 
 If you have any question or remark, fell free to contact me at thomas [dot] bellembois [at] gmail (com).
 
 - the [Chimithèque](https://listes.cru.fr/wiki/chimitheque/index) project I am working on
-- my [publications](http://thomasbellembois.ddns.net/documents/publications) about the ESUP WebDAV storage solution
-- my [CV](http://thomasbellembois.ddns.net/documents/CV)
+- my [publications](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/publications) about the ESUP WebDAV storage solution
+- my [CV](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/CV)
 
 - [Recover a Dell laptop BIOS flash issue](DELL_firmware.md)
 - [My Galaxy S4 GPS issue](S4_GPS.md)
