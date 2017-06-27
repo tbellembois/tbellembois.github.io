@@ -1,0 +1,31 @@
+# OGE commands
+
+- qconf -suserl # shows the list of all currently defined users
+- qconf -am [user] # add user to manager list
+- qconf -au [user] [userset] # add user(s) to userset list(s)
+- qconf -sul # shows all defined ACL
+- qconf -su [acl_name] # shows the names of the ACL acl_name
+- qconf -as [host] # add a submit host
+- qconf -shgrpl # show defined groups
+- qconf -ahgrp @allhosts # add new host group entry - just save the file without modifying it
+- qconf -aattr hostgroup hostlist [host] @allhosts # add host to group
+- qconf -shgrp_tree @allhosts # list hosts in group
+- qconf -mhgrp @allhosts # modify a group
+- qconf -aq main.q # add a new cluster queue
+- qconf -aattr queue hostlist @allhosts main.q # add a host group to a queue
+- qconf -as [host] # add a submit node
+- qconf -ae # add an execution node
+- qconf -de # delete an execution node
+- qconf -aattr queue slots “[[host]=X]” main.q # add X cores from a host to SGE
+- qconf -ap [pe_name] # add a parallel environment (to allow gridengine to start processes on the remote exec nodes)
+- qconf -spl # show a list of all currently defined parallel environments
+- qconf -sp [pe_name] # show the definition of the parallel environment
+- qconf -mp [pe_name] # modify a parallel environment
+- qconf -aattr queue pe_list [pe_name] [queue] # add a parallel environment to a queue
+- qconf -dp [pe_name] # delete a parallel environment
+- qconf -sql # display queues
+- qconf -mq [queue_name] # modify queue
+- qconf -sh # show current administrative hosts
+- qconf -ss # show current submit hosts
+- qconf -sel # show current execution host
+- qdel [job_id] # delete a job
