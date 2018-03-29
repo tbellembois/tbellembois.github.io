@@ -9,7 +9,7 @@ If you have any question or remark, fell free to contact me at thomas [dot] bell
 - my [publications](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/publications) about the ESUP WebDAV storage solution
 - my [CV](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/CV) in french
 
-
+- [A NFS4/Kerberos/AD crusade](kerberos.md)
 - [Playing with an Openmoko Freerunner](freerunner.md)
 - [Recover a Dell laptop BIOS flash issue](DELL_firmware.md)
 - [An attempt to configure 2 graphic cards and 3 monitors with the i3 windows manager](dual_card_linux.md)
