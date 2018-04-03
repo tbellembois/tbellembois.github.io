@@ -298,20 +298,22 @@ For the `-crypto` parameter I have entered the first returned by the klist comma
 
 ## Usefull debug commands
 
+```bash
  rpcdebug -m nfsd -s all
  rpcdebug -m rpc -s all
  rpc-gssd -vvv -f
+```
 
 ## Links
 
-- https://www.safesquid.com/content-filtering/integrating-linux-host-windows-ad-kerberos-sso-authentication#h.wz9jygqxw6vc]  
-- [https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c01096258]  
-- [https://social.technet.microsoft.com/Forums/fr-FR/0680dcee-9153-43ba-a4b0-a754a5f0db33/kinit-client-not-found-in-kerberos-database-while-getting-initial-credentials?forum=winservergen]
-- [https://ovalousek.wordpress.com/2015/10/15/enable-kerberized-nfs-with-sssd-and-active-directory/]
-- [https://help.ubuntu.com/community/NFSv4Howto#NFSv4_and_Autofs]
-- [https://groups.google.com/forum/#!topic/linux.samba/uP119bAe0CA]
-- [https://blogs.nologin.es/rickyepoderi/index.php?/archives/104-Two-Tips-about-Kerberos.html]
-- [http://coewww.rutgers.edu/www1/linuxclass2009/doc/krbnfs_howto_v3.pdf]
+- <https://www.safesquid.com/content-filtering/integrating-linux-host-windows-ad-kerberos-sso-authentication#h.wz9jygqxw6vc>  
+- <https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c01096258>  
+- <https://social.technet.microsoft.com/Forums/fr-FR/0680dcee-9153-43ba-a4b0-a754a5f0db33/kinit-client-not-found-in-kerberos-database-while-getting-initial-credentials?forum=winservergen>
+- <https://ovalousek.wordpress.com/2015/10/15/enable-kerberized-nfs-with-sssd-and-active-directory/>
+- <https://help.ubuntu.com/community/NFSv4Howto#NFSv4_and_Autofs>
+- <https://groups.google.com/forum/#!topic/linux.samba/uP119bAe0CA>
+- <https://blogs.nologin.es/rickyepoderi/index.php?/archives/104-Two-Tips-about-Kerberos.html>
+- <http://coewww.rutgers.edu/www1/linuxclass2009/doc/krbnfs_howto_v3.pdf>
 
 
 [unixhomedir]: /media/kerberos/unixhomedir.png
