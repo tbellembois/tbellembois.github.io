@@ -254,7 +254,7 @@ thbellem@z-stretchl:/$
 
 Success ! Of course the remote `thbellem` directory is owned by the user `thbellem`.
 
-### creating the principals
+### creating the principal names for the users
 
 server:
 ```bash
@@ -276,6 +276,26 @@ setspn -A nfs/z-stretchl.iut.local nfs-z-stretchl
 setspn -A nfs/z-stretchl.iut.local@IUT.LOCAL nfs-z-stretchl
 ```
 
+The `host` principals are the machines principals used to join the AD to authenticate the users. The `nfs` principals are the machines principals used to authenticate the machine on the NFS server to mount the exported filesystem. 
+
+The 3 principal names:
+- hostname
+- hostname.domain
+- hostname.domain@REALM
+are required for each user.
+
+### creating the keytabs
+
+```
+    ktpass -princ nfs/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\$user.keytab -crypto rc4-hmac-nt
+    ktpass -princ nfs/z-stretchl.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-z-stretchl -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\$user.keytab -crypto rc4-hmac-nt
+``` 
+- enter the same password as the user password
+
+For the `-crypto` parameter I have entered the first returned by the klist command.
+
+![klistwin][klistwin]
+
 ## Usefull debug commands
 
  rpcdebug -m nfsd -s all
@@ -284,14 +304,16 @@ setspn -A nfs/z-stretchl.iut.local@IUT.LOCAL nfs-z-stretchl
 
 ## Links
 
-[https://www.safesquid.com/content-filtering/integrating-linux-host-windows-ad-kerberos-sso-authentication#h.wz9jygqxw6vc]  
-[https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c01096258][https://social.technet.microsoft.com/Forums/fr-FR/0680dcee-9153-43ba-a4b0-a754a5f0db33/kinit-client-not-found-in-kerberos-database-while-getting-initial-credentials?forum=winservergen]
-[https://ovalousek.wordpress.com/2015/10/15/enable-kerberized-nfs-with-sssd-and-active-directory/]
-[https://help.ubuntu.com/community/NFSv4Howto#NFSv4_and_Autofs]
-[https://groups.google.com/forum/#!topic/linux.samba/uP119bAe0CA]
-[https://blogs.nologin.es/rickyepoderi/index.php?/archives/104-Two-Tips-about-Kerberos.html]
-[http://coewww.rutgers.edu/www1/linuxclass2009/doc/krbnfs_howto_v3.pdf]
+- https://www.safesquid.com/content-filtering/integrating-linux-host-windows-ad-kerberos-sso-authentication#h.wz9jygqxw6vc]  
+- [https://support.hpe.com/hpsc/doc/public/display?docId=emr_na-c01096258]  
+- [https://social.technet.microsoft.com/Forums/fr-FR/0680dcee-9153-43ba-a4b0-a754a5f0db33/kinit-client-not-found-in-kerberos-database-while-getting-initial-credentials?forum=winservergen]
+- [https://ovalousek.wordpress.com/2015/10/15/enable-kerberized-nfs-with-sssd-and-active-directory/]
+- [https://help.ubuntu.com/community/NFSv4Howto#NFSv4_and_Autofs]
+- [https://groups.google.com/forum/#!topic/linux.samba/uP119bAe0CA]
+- [https://blogs.nologin.es/rickyepoderi/index.php?/archives/104-Two-Tips-about-Kerberos.html]
+- [http://coewww.rutgers.edu/www1/linuxclass2009/doc/krbnfs_howto_v3.pdf]
 
 
 [unixhomedir]: /media/kerberos/unixhomedir.png
 [dsadd]: /media/kerberos/dsadd.png
+[klistwin]: /media/kerberos/klistwin.png
