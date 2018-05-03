@@ -316,6 +316,44 @@ For the `-crypto` parameter I have entered the first returned by the klist comma
 - <http://coewww.rutgers.edu/www1/linuxclass2009/doc/krbnfs_howto_v3.pdf>
 
 
+## Plus: samba and SSSD
+
+To enable SSSD/kerberos authentication with samba add the following principal names:
+```bash
+    setspn -A host/dublin nfs-dublin
+    setspn -A host/dublin.iut.local nfs-dublin
+    setspn -A host/dublin.iut.local@IUT.LOCAL nfs-dublin
+    setspn -A nfs/dublin nfs-dublin
+    setspn -A nfs/dublin.iut.local nfs-dublin
+    setspn -A nfs/dublin.iut.local@IUT.LOCAL nfs-dublin
+    setspn -A cifs/dublin nfs-dublin
+    setspn -A cifs/dublin.iut.local nfs-dublin
+    setspn -A cifs/dublin.iut.local@IUT.LOCAL nfs-dublin
+    setspn -A cifs/dublin@IUT.LOCAL nfs-dublin
+```
+and generate an additionnal keytab:
+```bash
+	ktpass -princ nfs/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\nfs-dublin.keytab -crypto rc4-hmac-nt
+	ktpass -princ cifs/dublin@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\cifs-dublin.keytab -crypto rc4-hmac-nt
+```
+
+Rsync the keytabs on the server and merge them with:
+```bash
+    ktutil
+    read_kt /tmp/nfs-dublin.keytab
+    read_kt /tmp/cifs-dublin.keytab
+    write_kt /etc/krb5.keytab
+```
+
+Here is the part of the relevant `/etc/smb.conf` configuration:
+```
+server role = member server
+security = ads
+workgroup = IUT
+realm = iut.local
+kerberos method = system keytab
+```
+
 [unixhomedir]: /media/kerberos/unixhomedir.png
 [dsadd]: /media/kerberos/dsadd.png
 [klistwin]: /media/kerberos/klistwin.png
