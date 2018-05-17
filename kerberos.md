@@ -171,11 +171,11 @@ This was the longest taks. I have generated thousands of keytab and googled the 
 
 ## general principle
 
-You have to create an **AD user** per machine (NFS server and clients). The name of these users is not important. 
+You have to create two **AD user** per machine (NFS server and clients). The name of these users is not important. The first AD user is **host** user, the second one a **service** user. 
 The you must create **principals** bound to the previous users. A principal is a kerberos element used to authenticate machines, users and services.
 Finally you have to create **keytabs** files for the Linux clients. 
 
-## create an AD user per machine
+## create AD user per machine
 
 You can do it with the GUI tools or using the `dsadd` command line tool.
 Operations must my performed with the administrator account.
@@ -184,10 +184,16 @@ Operations must my performed with the administrator account.
 
 server:
 ```bash
+// host user
+dsadd user CN=host-dublin,CN=Users,DC=iut,DC=local -samid host-dublin -pwd 1234
+// NFS service user
 dsadd user CN=nfs-dublin,CN=Users,DC=iut,DC=local -samid nfs-dublin -pwd 1234
 ```
 client:
 ```bash
+// host user
+dsadd user CN=host-z-stretchl,CN=Users,DC=iut,DC=local -samid host-z-stretchl -pwd 5678
+// NFS service user
 dsadd user CN=nfs-z-stretchl,CN=Users,DC=iut,DC=local -samid nfs-z-stretchl -pwd 5678
 ```
 
@@ -258,9 +264,10 @@ Success ! Of course the remote `thbellem` directory is owned by the user `thbell
 
 server:
 ```bash
-setspn -A host/dublin nfs-dublin
-setspn -A host/dublin.iut.local nfs-dublin
-setspn -A host/dublin.iut.local@IUT.LOCAL nfs-dublin
+setspn -A host/dublin host-dublin
+setspn -A host/dublin.iut.local host-dublin
+setspn -A host/dublin.iut.local@IUT.LOCAL host-dublin
+
 setspn -A nfs/dublin nfs-dublin
 setspn -A nfs/dublin.iut.local nfs-dublin
 setspn -A nfs/dublin.iut.local@IUT.LOCAL nfs-dublin
@@ -268,9 +275,10 @@ setspn -A nfs/dublin.iut.local@IUT.LOCAL nfs-dublin
 
 client:
 ```bash
-setspn -A host/z-stretchl nfs-z-stretchl
-setspn -A host/z-stretchl.iut.local nfs-z-stretchl
-setspn -A host/z-stretchl.iut.local@IUT.LOCAL nfs-z-stretchl
+setspn -A host/z-stretchl host-z-stretchl
+setspn -A host/z-stretchl.iut.local host-z-stretchl
+setspn -A host/z-stretchl.iut.local@IUT.LOCAL host-z-stretchl
+
 setspn -A nfs/z-stretchl nfs-z-stretchl
 setspn -A nfs/z-stretchl.iut.local nfs-z-stretchl
 setspn -A nfs/z-stretchl.iut.local@IUT.LOCAL nfs-z-stretchl
@@ -287,14 +295,34 @@ are required for each user.
 ### creating the keytabs
 
 ```
-    ktpass -princ nfs/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\$user.keytab -crypto rc4-hmac-nt
-    ktpass -princ nfs/z-stretchl.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-z-stretchl -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\$user.keytab -crypto rc4-hmac-nt
+    // server host keytab
+    ktpass -princ host/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\host-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\host-dublin.keytab -crypto rc4-hmac-nt
+    // server NFS service keytab
+    ktpass -princ nfs/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\nfs-dublin.keytab -crypto rc4-hmac-nt
+
+    // client host keytab
+    ktpass -princ host/z-stretchl.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\host-z-stretchl -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\host-z-stretchl.keytab -crypto rc4-hmac-nt
+    // client NFS service keytab
+    ktpass -princ nfs/z-stretchl.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-z-stretchl -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\nfs-z-stretchl.keytab -crypto rc4-hmac-nt
 ``` 
 - enter the same password as the user password
 
 For the `-crypto` parameter I have entered the first returned by the klist command.
 
 ![klistwin][klistwin]
+
+### merging the keytab on both the client and server
+
+Use the `ktutil` command.
+```bash
+    $ ktutil
+    $ read_kt /tmp/host-dublin.keytab
+    $ read_kt /tmp/nfs-dublin.keytab
+    $ write_kt /etc/krb5.keytab
+    $ quit
+```
+
+Restart `sssd`. Clean its cache may help.
 
 ## Usefull debug commands
 
@@ -318,32 +346,22 @@ For the `-crypto` parameter I have entered the first returned by the klist comma
 
 ## Plus: samba and SSSD
 
-To enable SSSD/kerberos authentication with samba add the following principal names:
+To enable SSSD/kerberos authentication with samba add another service AD user and configure the principal names:
 ```bash
-    setspn -A host/dublin nfs-dublin
-    setspn -A host/dublin.iut.local nfs-dublin
-    setspn -A host/dublin.iut.local@IUT.LOCAL nfs-dublin
-    setspn -A nfs/dublin nfs-dublin
-    setspn -A nfs/dublin.iut.local nfs-dublin
-    setspn -A nfs/dublin.iut.local@IUT.LOCAL nfs-dublin
-    setspn -A cifs/dublin nfs-dublin
-    setspn -A cifs/dublin.iut.local nfs-dublin
-    setspn -A cifs/dublin.iut.local@IUT.LOCAL nfs-dublin
-    setspn -A cifs/dublin@IUT.LOCAL nfs-dublin
-```
-and generate an additionnal keytab:
-```bash
-	ktpass -princ nfs/dublin.iut.local@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\nfs-dublin.keytab -crypto rc4-hmac-nt
-	ktpass -princ cifs/dublin@IUT.LOCAL -pass 1234 -mapuser IUT\nfs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\cifs-dublin.keytab -crypto rc4-hmac-nt
+    dsadd user CN=cifs-dublin,CN=Users,DC=iut,DC=local -samid cifs-dublin -pwd 1234
+
+    setspn -A cifs/dublin cifs-dublin
+    setspn -A cifs/dublin.iut.local cifs-dublin
+    setspn -A cifs/dublin.iut.local@IUT.LOCAL cifs-dublin
+    setspn -A cifs/dublin@IUT.LOCAL cifs-dublin
 ```
 
-Rsync the keytabs on the server and merge them with:
+and generate an additionnal keytab:
 ```bash
-    ktutil
-    read_kt /tmp/nfs-dublin.keytab
-    read_kt /tmp/cifs-dublin.keytab
-    write_kt /etc/krb5.keytab
+	ktpass -princ cifs/dublin@IUT.LOCAL -pass 1234 -mapuser IUT\cifs-dublin -pType KRB5_NT_PRINCIPAL -out c:\TMP\krb\cifs-dublin.keytab -crypto rc4-hmac-nt
 ```
+
+Use `ktutil` to merge the keytab.
 
 Here is the part of the relevant `/etc/smb.conf` configuration:
 ```
