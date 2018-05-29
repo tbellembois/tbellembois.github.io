@@ -1,5 +1,15 @@
 # NFS4/Kerberos/Active Directory - the last crusade
 
+## Emergency to do list
+
+In case of kerberos problem check (on both clients and servers) that:
+- your machines are NTP synchronized (this is a major source of issues)
+- your machines are properly registered in your DNS (direct and reverse zones)
+- you have generated the proper keytab with the correct SPN as explained in this documentation
+- you have chown/chmod your `krb5.keytab` (`-rw------- root root`) and `krb5.conf` (`-rw-r--r-- root root`)
+- you can obtain a TGT ticket from a client with `kinit mylogin`
+- your machines can talk with your AD (check your firewall) - wireshark may help
+
 ## Introduction
 
 After fighting for 3 weeks trying to setup a NFS/Kerberos configuration with an ActiveDirectory, and Googling thousands of mailing lists and tutorials, here is my succesfull story.  
