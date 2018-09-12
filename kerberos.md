@@ -4,6 +4,7 @@
 
 In case of kerberos problem check (on both clients and servers) that:
 - your machines are NTP synchronized (this is a major source of issues)
+- you have run `timedatectl set-local-rtc 1 --adjust-system-clock` if your machines are in dual boot Windows/Linux
 - your machines are properly registered in your DNS (direct and reverse zones)
 - you have generated the proper keytab with the correct SPN as explained in this documentation
 - you have chown/chmod your `krb5.keytab` (`-rw------- root root`) and `krb5.conf` (`-rw-r--r-- root root`)
