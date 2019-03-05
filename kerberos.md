@@ -322,6 +322,10 @@ For the `-crypto` parameter I have entered the first returned by the klist comma
 
 ![klistwin][klistwin]
 
+Here are some powershell scripts we use to do the job:
+- [server](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/files/krb3-server.ps1)
+- [client](https://github.com/tbellembois/tbellembois.github.io/tree/master/documents/files/krb3-client.ps1)
+
 ### merging the keytab on both the client and server
 
 Use the `ktutil` command.
