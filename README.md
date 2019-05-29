@@ -19,6 +19,7 @@ If you have any question or remark, fell free to contact me at thomas [dot] bell
 - [Building Torque/MAUI RPM on SL6](build_torque_maui_rpm.md)
 - [An i3 start menu](i3_menu.md)
 
+- [SAML2/Shibboleth authentication for Rocket.Chat](satosa.md)
 
 - [Create a vsftpd server with guest user creation delegation](VSFTPD.md)
 - [Create an annoncement screen with a Raspberry Pi](raspberry_announcement_screen.md)
